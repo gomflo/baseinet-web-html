@@ -1,10 +1,39 @@
 import { EyeOffIcon, ChevronDownIcon } from "@heroicons/react/solid";
 import { Menu } from "@headlessui/react";
-import { Fragment } from "react";
+import { Fragment, useState } from "react";
 import { Transition } from "@headlessui/react";
+import { z } from "zod";
 import Head from "next/head";
+import { useRouter } from "next/router";
+
+const LoginUser = z.object({
+  username: z.string().min(6).max(10),
+});
 
 export default function User() {
+  const router = useRouter();
+
+  const [validUsername, setValidUsername] = useState(false);
+  const [loading, setLoading] = useState(false);
+
+  function handleKeyUp(e) {
+    const username = e.target.value;
+
+    try {
+      LoginUser.parse({ username });
+      setValidUsername(true);
+    } catch (e) {
+      setValidUsername(false);
+    }
+  }
+
+  function handleSubmit(e) {
+    e.preventDefault();
+
+    setLoading(true);
+    setTimeout(() => router.push("/login/credentials"), 2500);
+  }
+
   return (
     <>
       <Head>
@@ -12,9 +41,9 @@ export default function User() {
         <meta name="theme-color" content="#feb913" />
       </Head>
       <main className="flex flex-col items-center justify-center min-h-full bg-gray-800">
-        <div className="absolute top-5 right-5">
+        {/* <div className="absolute top-5 right-5">
           <LanguageMenu />
-        </div>
+        </div> */}
 
         <div className="flex flex-col items-center justify-center">
           <div className="text-base font-semibold text-sm uppercase">
@@ -24,8 +53,8 @@ export default function User() {
         </div>
 
         <div className="w-72 mt-4">
-          <form className="">
-            <label for="user" className="block">
+          <form onSubmit={handleSubmit}>
+            <label htmlFor="user" className="block">
               <div className="relative mt-1">
                 <button
                   type="button"
@@ -37,16 +66,34 @@ export default function User() {
                   id="user"
                   type="password"
                   placeholder="Usuario de BASEInet"
+                  onKeyUp={handleKeyUp}
+                  maxLength={10}
                   className="block pr-16 bg-gray-700 border-none rounded-md mt-1 w-full focus:border-none ring-1 ring-transparent focus:ring-gray-500 placeholder-gray-500 text-gray-50"
                 />
               </div>
             </label>
 
-            <button className="mt-4 bg-base w-full py-2 rounded-md uppercase font-semibold text-gray-900 hover:bg-base/90 focus:outline-0 focus:border-none focus:ring-offset-gray-800 focus:ring-2 focus:ring-offset-2 focus:ring-base">
-              Continuar
-            </button>
+            {!loading ? (
+              <button
+                disabled={validUsername ? false : true}
+                className={`${
+                  validUsername
+                    ? "bg-base text-gray-900 hover:bg-base/90"
+                    : "bg-gray-700 text-gray-600"
+                } mt-4 w-full py-2 rounded-md uppercase font-semibold transition-colors focus:outline-0 focus:border-none focus:ring-offset-gray-800 focus:ring-2 focus:ring-offset-2 focus:ring-base`}
+              >
+                Continuar
+              </button>
+            ) : (
+              <button
+                disabled={true}
+                className="flex justify-center items-center w-full rounded-md text-gray-900 bg-base/95 mt-4 h-10"
+              >
+                <LoadingSpinner />
+              </button>
+            )}
 
-            <div className="mt-8 flex justify-center">
+            {/* <div className="mt-8 flex justify-center">
               <hr className="w-6 border-gray-700" />
             </div>
 
@@ -59,11 +106,89 @@ export default function User() {
               </a>
 
               <TokenOperationsMenu />
-            </div>
+            </div> */}
           </form>
         </div>
       </main>
     </>
+  );
+}
+
+function LoadingSpinner() {
+  return (
+    <svg
+      height="7"
+      viewBox="0 0 120 30"
+      xmlns="http://www.w3.org/2000/svg"
+      fill="currentColor"
+    >
+      <circle cx="15" cy="15" r="15">
+        <animate
+          attributeName="r"
+          from="15"
+          to="15"
+          begin="0s"
+          dur="0.8s"
+          values="15;9;15"
+          calcMode="linear"
+          repeatCount="indefinite"
+        />
+        <animate
+          attributeName="fill-opacity"
+          from="1"
+          to="1"
+          begin="0s"
+          dur="0.8s"
+          values="1;.5;1"
+          calcMode="linear"
+          repeatCount="indefinite"
+        />
+      </circle>
+      <circle cx="60" cy="15" r="9" fillOpacity="0.3">
+        <animate
+          attributeName="r"
+          from="9"
+          to="9"
+          begin="0s"
+          dur="0.8s"
+          values="9;15;9"
+          calcMode="linear"
+          repeatCount="indefinite"
+        />
+        <animate
+          attributeName="fill-opacity"
+          from="0.5"
+          to="0.5"
+          begin="0s"
+          dur="0.8s"
+          values=".5;1;.5"
+          calcMode="linear"
+          repeatCount="indefinite"
+        />
+      </circle>
+      <circle cx="105" cy="15" r="15">
+        <animate
+          attributeName="r"
+          from="15"
+          to="15"
+          begin="0s"
+          dur="0.8s"
+          values="15;9;15"
+          calcMode="linear"
+          repeatCount="indefinite"
+        />
+        <animate
+          attributeName="fill-opacity"
+          from="1"
+          to="1"
+          begin="0s"
+          dur="0.8s"
+          values="1;.5;1"
+          calcMode="linear"
+          repeatCount="indefinite"
+        />
+      </circle>
+    </svg>
   );
 }
 
