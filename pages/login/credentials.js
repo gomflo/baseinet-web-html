@@ -1,9 +1,10 @@
 import { EyeOffIcon } from "@heroicons/react/solid";
-import { useRef, useState } from "react";
+import { useRef, useState, Fragment } from "react";
 import { useRouter } from "next/router";
 import { z } from "zod";
 import Head from "next/head";
 import Link from "next/link";
+import { Transition, Dialog } from "@headlessui/react";
 
 const LoginCredentials = z.object({
   password: z.string().min(8).max(12),
@@ -18,6 +19,15 @@ export default function User() {
 
   const [validForm, setValidForm] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
+
+  function closeModal() {
+    setIsOpen(false);
+  }
+
+  function openModal() {
+    setIsOpen(true);
+  }
 
   function handleKeyUp() {
     try {
@@ -46,6 +56,84 @@ export default function User() {
         <title>BaseINET · Iniciar sesión</title>
         <meta name="theme-color" content="#feb913" />
       </Head>
+
+      <Transition appear show={isOpen} as={Fragment}>
+        <Dialog as="div" className="relative z-10" onClose={closeModal}>
+          <Transition.Child
+            as={Fragment}
+            enter="ease-out duration-300"
+            enterFrom="opacity-0"
+            enterTo="opacity-100"
+            leave="ease-in duration-200"
+            leaveFrom="opacity-100"
+            leaveTo="opacity-0"
+          >
+            <div className="fixed inset-0 bg-gray-600 bg-opacity-90" />
+          </Transition.Child>
+
+          <div className="fixed inset-0 overflow-y-auto">
+            <div className="flex min-h-full items-center justify-center p-4 text-center">
+              <Transition.Child
+                as={Fragment}
+                enter="ease-out duration-300"
+                enterFrom="opacity-0 scale-95"
+                enterTo="opacity-100 scale-100"
+                leave="ease-in duration-200"
+                leaveFrom="opacity-100 scale-100"
+                leaveTo="opacity-0 scale-95"
+              >
+                <Dialog.Panel className="w-full max-w-md transform overflow-hidden rounded-2xl bg-white p-6 text-center align-middle shadow-xl transition-all">
+                  <div className="text-base flex justify-center">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      strokeWidth={1.5}
+                      stroke="currentColor"
+                      className="w-14 h-14"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="M17.982 18.725A7.488 7.488 0 0012 15.75a7.488 7.488 0 00-5.982 2.975m11.963 0a9 9 0 10-11.963 0m11.963 0A8.966 8.966 0 0112 21a8.966 8.966 0 01-5.982-2.275M15 9.75a3 3 0 11-6 0 3 3 0 016 0z"
+                      />
+                    </svg>
+                  </div>
+
+                  <Dialog.Title
+                    as="h3"
+                    className="mt-3 text-lg font-medium leading-6 text-gray-900"
+                  >
+                    Tu usuario se encuentra bloqueado
+                  </Dialog.Title>
+                  <div className="mt-2">
+                    <div className="text-sm text-gray-500">
+                      <p>
+                        Si deseas desbloquearlo llama al Centro de Atención a
+                        Clientes para el proceso de desbloqueo de credenciales.{" "}
+                      </p>
+                      <p>
+                        <b>(00) 0000-0000</b>
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="mt-6">
+                    <button
+                      type="button"
+                      className="inline-flex justify-center rounded-md border border-transparent bg-base px-4 py-2 text-sm font-medium text-gray-900 hover:bg-base/80 focus:outline-none focus-visible:ring-2 focus-visible:ring-base focus-visible:ring-offset-2"
+                      onClick={closeModal}
+                    >
+                      Entendido
+                    </button>
+                  </div>
+                </Dialog.Panel>
+              </Transition.Child>
+            </div>
+          </div>
+        </Dialog>
+      </Transition>
+
       <main className="flex flex-col items-center justify-center min-h-full bg-gray-800">
         <div className="flex flex-col items-center justify-center">
           <div className="text-base font-semibold text-sm uppercase">
