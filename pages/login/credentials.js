@@ -19,7 +19,7 @@ export default function User() {
 
   const [validForm, setValidForm] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [isOpen, setIsOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState(true);
 
   function closeModal() {
     setIsOpen(false);
@@ -83,7 +83,7 @@ export default function User() {
                 leaveTo="opacity-0 scale-95"
               >
                 <Dialog.Panel className="w-full max-w-md transform overflow-hidden rounded-2xl bg-white p-6 text-center align-middle shadow-xl transition-all">
-                  <div className="text-base flex justify-center">
+                  {/* <div className="text-base flex justify-center">
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
                       fill="none"
@@ -125,6 +125,49 @@ export default function User() {
                       onClick={closeModal}
                     >
                       Entendido
+                    </button>
+                  </div> */}
+
+                  <div className="text-base flex justify-center">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      strokeWidth={1.5}
+                      stroke="currentColor"
+                      className="w-14 h-14"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="M12 10.5v3.75m-9.303 3.376C1.83 19.126 2.914 21 4.645 21h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 4.88c-.866-1.501-3.032-1.501-3.898 0L2.697 17.626zM12 17.25h.007v.008H12v-.008z"
+                      />
+                    </svg>
+                  </div>
+
+                  <Dialog.Title
+                    as="h3"
+                    className="mt-3 text-lg font-medium leading-6 text-gray-900 px-12"
+                  >
+                    Actualmente tienes una sesión iniciada en otro dispositivo
+                  </Dialog.Title>
+                  <div className="mt-2">
+                    <div className="text-sm text-gray-500">
+                      <p>Si continuas cerraremos tu otra sesión.</p>
+                    </div>
+                  </div>
+
+                  <div className="mt-6">
+                    <button
+                      type="button"
+                      className="inline-flex justify-center rounded-md border border-transparent bg-base px-4 py-2 text-sm font-medium text-gray-900 hover:bg-base/80 focus:outline-none focus-visible:ring-2 focus-visible:ring-base focus-visible:ring-offset-2"
+                      onClick={closeModal}
+                    >
+                      Continuar mi sesión aquí
+                    </button>
+
+                    <button className="mt-4 flex justify-center w-full text-gray-500 text-sm font-semibold">
+                      Mantener mi otra sesión
                     </button>
                   </div>
                 </Dialog.Panel>
