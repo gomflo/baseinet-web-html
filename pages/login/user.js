@@ -1,11 +1,11 @@
 import { EyeOffIcon, ChevronDownIcon } from "@heroicons/react/solid";
 import { Menu } from "@headlessui/react";
-import { Fragment, useState } from "react";
+import { Fragment, useEffect, useState } from "react";
 import { Dialog, Transition } from "@headlessui/react";
-import toast, { Toaster } from "react-hot-toast";
 import { z } from "zod";
-import Head from "next/head";
 import { useRouter } from "next/router";
+import { useLocalStorage } from "react-use";
+import Head from "next/head";
 
 const LoginUser = z.object({
   username: z.string().min(6).max(10),
@@ -13,6 +13,12 @@ const LoginUser = z.object({
 
 export default function User() {
   const router = useRouter();
+  const [userLoc, setUserLoc] = useLocalStorage("userLoc");
+
+  useEffect(() => {
+    console.log(userLoc);
+    if (!userLoc) router.push("/login/geolocation");
+  }, []);
 
   const [validUsername, setValidUsername] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -57,8 +63,6 @@ export default function User() {
         <meta name="theme-color" content="#feb913" />
       </Head>
 
-      <Toaster position="top-center" />
-
       <Transition appear show={isOpen} as={Fragment}>
         <Dialog as="div" className="relative z-10" onClose={closeModal}>
           <Transition.Child
@@ -86,7 +90,7 @@ export default function User() {
               >
                 <Dialog.Panel className="w-full max-w-md transform overflow-hidden rounded-2xl bg-white p-6 text-center align-middle shadow-xl transition-all">
                   {/* ERROR MESSAGE */}
-                  <div className="text-base flex justify-center">
+                  {/* <div className="text-base flex justify-center">
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
                       fill="none"
@@ -123,42 +127,6 @@ export default function User() {
                     >
                       Entendido
                     </button>
-                  </div>
-
-                  {/* GEOLOCATION REQUIRED */}
-                  {/* <div className="text-base flex justify-center">
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      strokeWidth={1.5}
-                      stroke="currentColor"
-                      className="w-14 h-14"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z"
-                      />
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z"
-                      />
-                    </svg>
-                  </div>
-
-                  <Dialog.Title
-                    as="h3"
-                    className="mt-3 text-lg font-medium leading-6 text-gray-900"
-                  >
-                    Es necesario compartir tu ubicación
-                  </Dialog.Title>
-                  <div className="mt-2">
-                    <p className="text-sm text-gray-500">
-                      Por disposición oficial, debes compartir tu ubicación para
-                      continuar con tu sesión.
-                    </p>
                   </div> */}
                 </Dialog.Panel>
               </Transition.Child>
@@ -237,77 +205,6 @@ export default function User() {
           </form>
         </div>
       </main>
-    </>
-  );
-}
-
-function Modal() {
-  return (
-    <>
-      <div className="fixed inset-0 flex items-center justify-center">
-        <button
-          type="button"
-          onClick={openModal}
-          className="rounded-md bg-black bg-opacity-20 px-4 py-2 text-sm font-medium text-white hover:bg-opacity-30 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75"
-        >
-          Open dialog
-        </button>
-      </div>
-
-      <Transition appear show={isOpen} as={Fragment}>
-        <Dialog as="div" className="relative z-10" onClose={closeModal}>
-          <Transition.Child
-            as={Fragment}
-            enter="ease-out duration-300"
-            enterFrom="opacity-0"
-            enterTo="opacity-100"
-            leave="ease-in duration-200"
-            leaveFrom="opacity-100"
-            leaveTo="opacity-0"
-          >
-            <div className="fixed inset-0 bg-black bg-opacity-25" />
-          </Transition.Child>
-
-          <div className="fixed inset-0 overflow-y-auto">
-            <div className="flex min-h-full items-center justify-center p-4 text-center">
-              <Transition.Child
-                as={Fragment}
-                enter="ease-out duration-300"
-                enterFrom="opacity-0 scale-95"
-                enterTo="opacity-100 scale-100"
-                leave="ease-in duration-200"
-                leaveFrom="opacity-100 scale-100"
-                leaveTo="opacity-0 scale-95"
-              >
-                <Dialog.Panel className="w-full max-w-md transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all">
-                  <Dialog.Title
-                    as="h3"
-                    className="text-lg font-medium leading-6 text-gray-900"
-                  >
-                    Payment successful
-                  </Dialog.Title>
-                  <div className="mt-2">
-                    <p className="text-sm text-gray-500">
-                      Your payment has been successfully submitted. We’ve sent
-                      you an email with all of the details of your order.
-                    </p>
-                  </div>
-
-                  <div className="mt-4">
-                    <button
-                      type="button"
-                      className="inline-flex justify-center rounded-md border border-transparent bg-blue-100 px-4 py-2 text-sm font-medium text-blue-900 hover:bg-blue-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
-                      onClick={closeModal}
-                    >
-                      Got it, thanks!
-                    </button>
-                  </div>
-                </Dialog.Panel>
-              </Transition.Child>
-            </div>
-          </div>
-        </Dialog>
-      </Transition>
     </>
   );
 }

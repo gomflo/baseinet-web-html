@@ -19,7 +19,7 @@ export default function User() {
 
   const [validForm, setValidForm] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [isOpen, setIsOpen] = useState(true);
+  const [isOpen, setIsOpen] = useState(false);
 
   function closeModal() {
     setIsOpen(false);
@@ -83,7 +83,7 @@ export default function User() {
                 leaveTo="opacity-0 scale-95"
               >
                 <Dialog.Panel className="w-full max-w-md transform overflow-hidden rounded-2xl bg-white p-6 text-center align-middle shadow-xl transition-all">
-                  {/* <div className="text-base flex justify-center">
+                  <div className="text-base flex justify-center">
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
                       fill="none"
@@ -126,9 +126,10 @@ export default function User() {
                     >
                       Entendido
                     </button>
-                  </div> */}
+                  </div>
 
-                  <div className="text-base flex justify-center">
+                  {/* SESSION ACTIVE */}
+                  {/* <div className="text-base flex justify-center">
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
                       fill="none"
@@ -169,7 +170,7 @@ export default function User() {
                     <button className="mt-4 flex justify-center w-full text-gray-500 text-sm font-semibold">
                       Mantener mi otra sesión
                     </button>
-                  </div>
+                  </div> */}
                 </Dialog.Panel>
               </Transition.Child>
             </div>
